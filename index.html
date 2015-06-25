@@ -1,0 +1,48 @@
+<!doctype html>
+<head>
+<script src="angular.js"></script> 
+<title>Angular form data to mySQL PHP example</title> 
+   
+</head>
+<body>
+<div ng-app="myapp" ng-controller= "empcontroller">
+    <form name="frm">
+        Employee no.(must be 4 digits) <br/>
+        <input type ="number" name="empno" ng-model="empno" required ng-minlength="4" ng-maxlength="4" />
+        <span ng-show="frm.empno.$dirty && frm.empno.$error.minlength">Must be 4 numbers, this is too short.</span>
+        <span ng-show="frm.empno.$dirty && frm.empno.$error.maxlength">Must be 4 numbers, this is too long.</span>
+        <br/>
+        
+        First Name <br/>
+        <input type ="text" ng-model="fname" name="fname" required ng-minlength="2" ng-maxlength="14"/>
+        <span ng-show="frm.fname.$dirty && frm.fname.$error.minlength">First name is too short.</span>
+        <span ng-show="frm.fname.$dirty && frm.fname.$error.maxlength">First name is too long.</span>
+        <br/>
+        
+        Last Name <br/>
+        <input type ="text" name="lname" required ng-minlength="3" ng-maxlength="15" ng-model="lname"/>
+        <span ng-show="frm.lname.$dirty && frm.lname.$error.minlength">Last name is too short.</span>
+        <span ng-show="frm.lname.$dirty && frm.lname.$error.maxlength">Last name is too long.</span>
+        <br/>
+                
+        Department (numbers+letters)<br/>(example: 187ABC)<br/>
+        <input type ="text" name="dept" required ng-model="dept"/><br/>
+        <input type="button" value="submit" ng-click="insertdata()" ng-disabled="frm.$invalid"/><br/>
+    </form> 
+    
+    <script>
+        var app = angular.module('myapp', []);
+        app.controller('empcontroller', function($scope, $http){
+            $scope.insertdata=function(){
+                $http.post("insert.php", {'empno':$scope.empno, 'fname':$scope.fname, 'lname':$scope.lname, 'dept':$scope.dept})
+                .success(function(data, status, headers, config){
+                    console.log("Data Successfully Inserted!"+" status = "+status);
+                    //this displays the vardump from the PHP file
+                    console.log("Data = "+data);
+                });
+            }
+        });
+    </script>
+</div>    
+</body>    
+</html>
